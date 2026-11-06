@@ -1,0 +1,14 @@
+name: brain-mri-fem
+channels: [conda-forge, pytorch]
+dependencies:
+  - python=3.10
+  - numpy
+  - scipy
+  - scikit-image
+  - pyyaml
+  - nibabel
+  - pytorch
+  - pytest
+  - pip
+  - pip:
+      - -e .

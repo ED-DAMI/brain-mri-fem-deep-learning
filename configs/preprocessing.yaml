@@ -1,0 +1,8 @@
+data_dir: data/raw
+output_dir: results/preprocessed
+modality: 0
+normalization: zscore_nonzero
+target_shape: [128, 128, 128]
+resample_spacing: null
+seed: 42
+split: [0.7, 0.15, 0.15]

@@ -1,0 +1,2 @@
+[console_scripts]
+brain-mri-fem = brain_mri_fem.cli:main

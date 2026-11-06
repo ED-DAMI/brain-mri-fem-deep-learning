@@ -1,0 +1,4 @@
+surface_decimation_fraction: 0.5
+characteristic_length_min: 1.0
+characteristic_length_max: 4.0
+backend: gmsh

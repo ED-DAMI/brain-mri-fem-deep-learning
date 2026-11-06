@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brain-mri-fem"
+version = "0.1.0"
+description = "Reproducible brain MRI segmentation and FEM baseline"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "scikit-image>=0.21",
+  "PyYAML>=6.0",
+  "nibabel>=5.0",
+  "torch>=2.0",
+]
+
+[project.optional-dependencies]
+research = ["monai>=1.3", "torchio>=0.19", "trimesh>=4.0", "pyvista>=0.43", "gmsh>=4.11"]
+dev = ["pytest>=7.0", "pytest-cov>=4.0"]
+
+[project.scripts]
+brain-mri-fem = "brain_mri_fem.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

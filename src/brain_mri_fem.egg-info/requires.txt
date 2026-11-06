@@ -1,0 +1,17 @@
+numpy>=1.24
+scipy>=1.10
+scikit-image>=0.21
+PyYAML>=6.0
+nibabel>=5.0
+torch>=2.0
+
+[dev]
+pytest>=7.0
+pytest-cov>=4.0
+
+[research]
+monai>=1.3
+torchio>=0.19
+trimesh>=4.0
+pyvista>=0.43
+gmsh>=4.11

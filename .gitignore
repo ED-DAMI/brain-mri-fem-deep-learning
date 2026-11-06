@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+data/*
+!data/README.md
+!data/.gitkeep
+checkpoints/
+results/*
+!results/.gitkeep
+*.nii
+*.nii.gz
+*.pt
+*.pth
+*.stl
+*.vtk
+*.vtu
