@@ -110,8 +110,18 @@ that NIfTI or HDF5 files are present. The dataset may require Kaggle authenticat
 depending on the account and download policy. **Medical images and sensitive
 data will not be committed to this repository.**
 
-The exploratory notebook is [01_eda_brats2020.ipynb](notebooks/01_eda_brats2020.ipynb).
-Open it from the repository root and run all cells before preprocessing.
+Les notebooks suivent le pipeline complet :
+
+1. [01_eda_brats2020.ipynb](notebooks/01_eda_brats2020.ipynb) : exploration des volumes NIfTI.
+2. [01_eda_brats2020_h5.ipynb](notebooks/01_eda_brats2020_h5.ipynb) : exploration des coupes HDF5 Kaggle.
+3. [02_preprocessing.ipynb](notebooks/02_preprocessing.ipynb) : normalisation et séparation patient-level.
+4. [03_segmentation_unet3d.ipynb](notebooks/03_segmentation_unet3d.ipynb) : vérification du U-Net 3D et métriques.
+5. [04_reconstruction_3d.ipynb](notebooks/04_reconstruction_3d.ipynb) : reconstruction d'une surface par marching cubes.
+6. [05_fem_elasticity.ipynb](notebooks/05_fem_elasticity.ipynb) : résolution d'un problème d'élasticité FEM.
+
+Ouvrez-les depuis la racine du dépôt et exécutez les cellules dans l'ordre. Les notebooks
+de prétraitement et d'EDA affichent un message explicite si les données attendues ne sont
+pas encore téléchargées.
 
 The Kaggle version currently downloaded contains HDF5 2D slices (`image` and
 `mask`, shape `240x240`) rather than original 3D NIfTI volumes. Use
