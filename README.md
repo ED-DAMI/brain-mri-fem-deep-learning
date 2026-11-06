@@ -106,9 +106,18 @@ python scripts\download_data.py --source kaggle --output-dir data\raw
 ```
 
 The script copies the files into `data\raw\brats2020-training-data` and checks
-that NIfTI files are present. The dataset may require Kaggle authentication
+that NIfTI or HDF5 files are present. The dataset may require Kaggle authentication
 depending on the account and download policy. **Medical images and sensitive
 data will not be committed to this repository.**
+
+The exploratory notebook is [01_eda_brats2020.ipynb](notebooks/01_eda_brats2020.ipynb).
+Open it from the repository root and run all cells before preprocessing.
+
+The Kaggle version currently downloaded contains HDF5 2D slices (`image` and
+`mask`, shape `240x240`) rather than original 3D NIfTI volumes. Use
+[01_eda_brats2020_h5.ipynb](notebooks/01_eda_brats2020_h5.ipynb) for this
+download. It is suitable for a 2D U-Net; 3D reconstruction and FEM require
+the original 3D BraTS NIfTI dataset.
 
 ## Roadmap
 

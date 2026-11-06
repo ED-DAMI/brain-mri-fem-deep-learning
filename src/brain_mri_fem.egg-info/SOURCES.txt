@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 src/brain_mri_fem/__init__.py
+src/brain_mri_fem/__main__.py
 src/brain_mri_fem/cli.py
 src/brain_mri_fem/utils.py
 src/brain_mri_fem.egg-info/PKG-INFO

@@ -8,7 +8,7 @@ import tarfile
 import urllib.request
 from pathlib import Path
 
-URL = "http://medicaldecathlon.com/files/Task01_BrainTumour.tar"
+URL = "https://msd-for-monai.s3-us-west-2.amazonaws.com/Task01_BrainTumour.tar"
 KAGGLE_DATASET = "awsaf49/brats2020-training-data"
 EXPECTED_DIRECTORIES = ("imagesTr", "labelsTr")
 
@@ -47,9 +47,16 @@ def _download_from_kaggle(dataset: str, output_dir: Path) -> Path:
     if downloaded_path.resolve() != destination.resolve():
         shutil.copytree(downloaded_path, destination, dirs_exist_ok=True)
     nifti_files = list(destination.rglob("*.nii.gz"))
-    if not nifti_files:
-        raise RuntimeError(f"No .nii.gz files found in downloaded dataset: {destination}")
-    print(f"Copied {len(nifti_files)} NIfTI files to: {destination}")
+    h5_files = list(destination.rglob("*.h5"))
+    if not nifti_files and not h5_files:
+        raise RuntimeError(f"No .nii.gz or .h5 files found in downloaded dataset: {destination}")
+    if h5_files and not nifti_files:
+        print(
+            f"Copied {len(h5_files)} HDF5 2D slices to: {destination}. "
+            "This Kaggle version is for 2D training; use raw NIfTI BraTS data for 3D reconstruction."
+        )
+    else:
+        print(f"Copied {len(nifti_files)} NIfTI files to: {destination}")
     return destination
 
 

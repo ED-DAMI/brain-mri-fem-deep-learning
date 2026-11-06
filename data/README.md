@@ -1,7 +1,7 @@
 # Dataset
 
 Use the Medical Segmentation Decathlon Task01_BrainTumour dataset:
-<http://medicaldecathlon.com/>. It contains multimodal NIfTI volumes and
+<https://medicaldecathlon.com/>. It contains multimodal NIfTI volumes and
 labels for whole-tumour segmentation. The dataset is distributed under
 CC-BY-SA 4.0; cite the Medical Segmentation Decathlon paper and retain the
 license when sharing derived results.
