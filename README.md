@@ -1,59 +1,129 @@
-# Brain MRI Segmentation, 3D Reconstruction and FEM
+# Brain MRI Segmentation and 3D Reconstruction using Deep Learning and FEM
 
-Reproducible research scaffold for the Medical Segmentation Decathlon
-`Task01_BrainTumour` dataset. The pipeline is:
+**A hybrid approach combining deep learning and the Finite Element Method (FEM) for brain MRI analysis and 3D modeling.**
 
-`NIfTI -> preprocessing -> U-Net -> marching cubes -> tetrahedral mesh -> linear elasticity FEM`.
+> **Project status:** In development — this repository documents our planned methodology. Implementation and experimental results will be added progressively.
 
-The repository contains no patient data. Download it locally with
-`python scripts/download_data.py --output-dir data/raw` after reviewing the
-dataset license and citation in [data/README.md](data/README.md).
+## Overview
 
-## Quick start
+This academic project explores a hybrid workflow for processing **brain magnetic resonance imaging (MRI)** data. Deep learning will be used to segment anatomical structures or regions of interest, while the **Finite Element Method (FEM)** will be used on a mesh derived from the segmentation for mathematical modeling and, potentially, deformation or regularization.
 
-```powershell
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-pip install -e .
-pytest -q
-python -m brain_mri_fem --help
-python -m brain_mri_fem demo --output-dir results/demo
+Our goal is to connect **medical image analysis**, **3D reconstruction**, and **numerical simulation** within a reproducible Python-based pipeline.
+
+## Objectives
+
+- Preprocess 2D/3D brain MRI data (normalization, resizing, and data preparation).
+- Train and evaluate a deep learning model for brain MRI segmentation.
+- Reconstruct a 3D surface from the predicted segmentation masks.
+- Generate a mesh suitable for finite element analysis.
+- Apply an FEM-based numerical model to the reconstructed geometry.
+- Visualize and evaluate the results at each stage.
+
+## Proposed Workflow
+
+```text
+Brain MRI scans
+      |
+      v
+Preprocessing and normalization
+      |
+      v
+Deep learning segmentation (U-Net baseline)
+      |
+      v
+3D reconstruction of segmented regions
+      |
+      v
+Surface / volume mesh generation
+      |
+      v
+Finite element modeling (FEM)
+      |
+      v
+3D visualization and evaluation
 ```
 
-The demo uses a synthetic spherical lesion and exercises preprocessing,
-surface extraction, metrics, and the FEM solver without downloading data.
-Real experiments are configured through the YAML files in `configs/`.
+## Methodology
 
-## Current executable baseline
+### 1. Brain MRI preprocessing
 
-The dependency-light, synthetic end-to-end baseline is executable now:
+Load MRI scans, inspect image dimensions and voxel spacing, normalize intensity values, and prepare training/validation/test splits.
 
-```powershell
-python -m brain_mri_fem demo --output-dir results/demo
+### 2. Deep learning segmentation
+
+Start with a **U-Net** model to segment a selected brain structure or region of interest. Evaluate segmentation quality using metrics such as the **Dice coefficient** and **Intersection over Union (IoU)**.
+
+### 3. 3D reconstruction
+
+Combine segmentation predictions into a 3D volume, extract a surface (for example, using **Marching Cubes**), and visualize the reconstructed structure.
+
+### 4. Finite Element Method (FEM)
+
+Create a **volumetric mesh** from the reconstructed geometry and formulate a numerical problem on this mesh. A possible first experiment is a simplified **linear-elastic deformation** with specified material parameters and boundary conditions. This ensures that FEM is used to **solve a mathematical model**, rather than only to display a mesh.
+
+### 5. Evaluation
+
+Assess segmentation performance, inspect reconstructed geometries and mesh quality, and visualize the numerical FEM solution. Quantitative results will be added once experiments have been completed.
+
+## Proposed Tech Stack
+
+- **Language:** Python
+- **Deep learning:** PyTorch
+- **Medical imaging:** NiBabel and/or SimpleITK
+- **Image processing and 3D reconstruction:** NumPy, scikit-image
+- **Meshing and visualization:** Gmsh, PyVista
+- **Finite element analysis:** FEniCSx or another appropriate FEM solver
+
+*The final libraries may change as the implementation progresses.*
+
+## Planned Repository Structure
+
+```text
+brain-mri-fem-deep-learning/
+├── data/                 # Dataset instructions; no patient data committed
+├── notebooks/            # Exploration and experiments
+├── src/
+│   ├── preprocessing/    # MRI loading and preprocessing
+│   ├── segmentation/     # Deep learning models and training
+│   ├── reconstruction/   # 3D reconstruction and meshing
+│   └── fem/              # Finite element simulations
+├── results/              # Figures and experiment summaries
+├── requirements.txt      # Dependencies (to be added)
+└── README.md
 ```
 
-The preprocessing, U-Net, surface, and FEM components are also importable
-individually. Training orchestration, Gmsh integration, and full-dataset
-report generation remain the next research phase; their configuration files
-are included so experiments use explicit parameters rather than hidden
-defaults.
 
-The FEM implementation solves the weak form of linear isotropic elasticity,
-`find u in V: a(u,v)=l(v) for every v in V`, with
-`a(u,v)=integral epsilon(v):C:epsilon(u) dx`. A fixed boundary and a
-configurable traction are applied; results include displacements and von
-Mises stress. This is a research baseline, not a clinical tool.
 
-## Layout
+## Dataset and Privacy
 
-* `src/brain_mri_fem`: importable preprocessing, segmentation, reconstruction,
-  meshing, FEM, and utility modules.
-* `configs`: explicit YAML configuration for every phase.
-* `tests`: deterministic unit tests that do not require patient data.
-* `notebooks`: Colab-oriented quickstart placeholder and phase notebooks.
-* `report`: methodology and reproducibility notes.
-* `data`: download instructions only.
+The recommended dataset is BraTS 2020 from Kaggle:
+`awsaf49/brats2020-training-data`. Install the Kaggle client and download it
+with:
 
-Use `python scripts/download_data.py --help` for dataset acquisition. Do not
-commit `data/`, checkpoints, NIfTI files, or model weights.
+```powershell
+python -m pip install kagglehub
+python scripts\download_data.py --source kaggle --output-dir data\raw
+```
+
+The script copies the files into `data\raw\brats2020-training-data` and checks
+that NIfTI files are present. The dataset may require Kaggle authentication
+depending on the account and download policy. **Medical images and sensitive
+data will not be committed to this repository.**
+
+## Roadmap
+
+- [ ] Select the MRI dataset and segmentation target
+- [ ] Implement preprocessing and data exploration
+- [ ] Train and evaluate a U-Net baseline
+- [ ] Reconstruct segmented regions in 3D
+- [ ] Generate and inspect a volumetric mesh
+- [ ] Formulate and solve a simplified FEM problem
+- [ ] Compare results and prepare the final report
+
+## Team
+
+Academic mini-project developed by **Mohamed Eddami** and **Israe Yaaya**.
+
+## Academic Context
+
+This repository is part of a student project on the **Finite Element Method**, with an application to **brain MRI segmentation and 3D reconstruction**.
