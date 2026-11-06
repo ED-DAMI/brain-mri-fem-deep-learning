@@ -56,3 +56,55 @@ class UNet3D(nn.Module):
                 x = nn.functional.interpolate(x, size=skip.shape[2:], mode="trilinear", align_corners=False)
             x = self.up[index + 1](torch.cat((x, skip), dim=1))
         return self.head(x)
+
+
+class DoubleConv2D(nn.Module):
+    def __init__(self, in_channels: int, out_channels: int) -> None:
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, 3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.LeakyReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels, 3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.LeakyReLU(inplace=True),
+        )
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.layers(x)
+
+
+class UNet2D(nn.Module):
+    """Small 2D U-Net for the HDF5 slice dataset."""
+
+    def __init__(self, in_channels: int = 4, out_channels: int = 2, channels: tuple[int, ...] = (16, 32, 64)) -> None:
+        super().__init__()
+        if len(channels) < 2:
+            raise ValueError("channels must contain at least two levels")
+        self.down = nn.ModuleList()
+        self.pool = nn.MaxPool2d(2)
+        previous = in_channels
+        for width in channels:
+            self.down.append(DoubleConv2D(previous, width))
+            previous = width
+        self.up = nn.ModuleList()
+        for width, skip_width in zip(reversed(channels[:-1]), reversed(channels[:-1])):
+            self.up.append(nn.ConvTranspose2d(previous, width, 2, stride=2))
+            self.up.append(DoubleConv2D(width + skip_width, width))
+            previous = width
+        self.head = nn.Conv2d(previous, out_channels, 1)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        skips = []
+        for block in self.down[:-1]:
+            x = block(x)
+            skips.append(x)
+            x = self.pool(x)
+        x = self.down[-1](x)
+        for index in range(0, len(self.up), 2):
+            x = self.up[index](x)
+            skip = skips[-(index // 2 + 1)]
+            if x.shape[2:] != skip.shape[2:]:
+                x = nn.functional.interpolate(x, size=skip.shape[2:], mode="bilinear", align_corners=False)
+            x = self.up[index + 1](torch.cat((x, skip), dim=1))
+        return self.head(x)

@@ -114,14 +114,15 @@ Les notebooks suivent le pipeline complet :
 
 1. [01_eda_brats2020.ipynb](notebooks/01_eda_brats2020.ipynb) : exploration des volumes NIfTI.
 2. [01_eda_brats2020_h5.ipynb](notebooks/01_eda_brats2020_h5.ipynb) : exploration des coupes HDF5 Kaggle.
-3. [02_preprocessing.ipynb](notebooks/02_preprocessing.ipynb) : normalisation et séparation patient-level.
-4. [03_segmentation_unet3d.ipynb](notebooks/03_segmentation_unet3d.ipynb) : vérification du U-Net 3D et métriques.
-5. [04_reconstruction_3d.ipynb](notebooks/04_reconstruction_3d.ipynb) : reconstruction d'une surface par marching cubes.
+3. [02_preprocessing.ipynb](notebooks/02_preprocessing.ipynb) : normalisation des coupes HDF5 et séparation par volume.
+4. [03_segmentation_unet3d.ipynb](notebooks/03_segmentation_unet3d.ipynb) : segmentation 2D avec les quatre modalités HDF5.
+5. [04_reconstruction_3d.ipynb](notebooks/04_reconstruction_3d.ipynb) : reconstruction d'une surface depuis les coupes HDF5.
 6. [05_fem_elasticity.ipynb](notebooks/05_fem_elasticity.ipynb) : résolution d'un problème d'élasticité FEM.
 
-Ouvrez-les depuis la racine du dépôt et exécutez les cellules dans l'ordre. Les notebooks
-de prétraitement et d'EDA affichent un message explicite si les données attendues ne sont
-pas encore téléchargées.
+Ouvrez-les depuis la racine du dépôt et exécutez les cellules dans l'ordre. Le pipeline
+principal utilise directement `data/raw/data/*.h5`, où chaque fichier contient une image
+`240x240x4` et un masque `240x240x3`. Le notebook NIfTI reste disponible pour un futur
+jeu de données volumique.
 
 The Kaggle version currently downloaded contains HDF5 2D slices (`image` and
 `mask`, shape `240x240`) rather than original 3D NIfTI volumes. Use
